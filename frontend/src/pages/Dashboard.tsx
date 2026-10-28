@@ -177,7 +177,7 @@ export const Dashboard: React.FC = () => {
 
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={metrics?.network_activity} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={Array.isArray(metrics?.network_activity) ? metrics.network_activity : []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
                 <XAxis dataKey="time" stroke="#94A3B8" fontSize={11} tickLine={false} />
                 <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
@@ -299,7 +299,7 @@ export const Dashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {metrics?.recent_events.map((ev, i) => (
+                {(Array.isArray(metrics?.recent_events) ? metrics.recent_events : []).map((ev, i) => (
                   <tr key={i} className="hover:bg-slate-50/60 transition-colors">
                     <td className="py-3 px-4 font-mono text-slate-500">{ev.time}</td>
                     <td className="py-3 px-4 font-medium text-slate-800">{ev.event}</td>
@@ -333,7 +333,7 @@ export const Dashboard: React.FC = () => {
             <p className="text-xs text-slate-500 mb-4">Core microservice health monitors</p>
 
             <div className="space-y-3">
-              {metrics?.system_status.map((item, idx) => (
+              {(Array.isArray(metrics?.system_status) ? metrics.system_status : []).map((item, idx) => (
                 <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
                   <span className="text-xs font-semibold text-slate-700">{item.service}</span>
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">

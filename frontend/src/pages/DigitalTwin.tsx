@@ -196,7 +196,7 @@ export const DigitalTwin: React.FC = () => {
                   <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">Workstation Zone</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 my-4">
-                  {devices.filter((d) => d.location.includes('Room A')).map((d) => (
+                  {devices.filter((d) => (d.location || '').includes('Room A') || (d.location || '').includes('Room 301')).map((d) => (
                     <button
                       key={d.id}
                       onClick={() => setSelectedDevice(d)}
@@ -221,7 +221,7 @@ export const DigitalTwin: React.FC = () => {
                   <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">Zero-Trust Zone</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 my-4">
-                  {devices.filter((d) => d.location.includes('Server')).map((d) => (
+                  {devices.filter((d) => (d.location || '').includes('Server')).map((d) => (
                     <button
                       key={d.id}
                       onClick={() => setSelectedDevice(d)}
@@ -246,7 +246,7 @@ export const DigitalTwin: React.FC = () => {
                   <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">Prototyping Zone</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 my-4">
-                  {devices.filter((d) => d.location.includes('Room B')).map((d) => (
+                  {devices.filter((d) => (d.location || '').includes('Room B') || (d.location || '').includes('Fabrication')).map((d) => (
                     <button
                       key={d.id}
                       onClick={() => setSelectedDevice(d)}
@@ -271,7 +271,7 @@ export const DigitalTwin: React.FC = () => {
                   <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Physical Security</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 my-4">
-                  {devices.filter((d) => d.device_type === 'Access Door' || d.device_type === 'IoT Device').map((d) => (
+                  {devices.filter((d) => d.device_type === 'Access Door' || d.device_type === 'IoT Device' || (d.device_type || '').includes('IoT') || (d.device_type || '').includes('Access')).map((d) => (
                     <button
                       key={d.id}
                       onClick={() => setSelectedDevice(d)}

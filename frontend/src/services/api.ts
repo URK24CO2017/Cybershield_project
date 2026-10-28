@@ -67,24 +67,34 @@ export const DEMO_USERS: Record<string, User> = {
 function getFallbackData(endpoint: string): any {
   if (endpoint.includes('/dashboard/metrics')) {
     return {
-      total_devices: 8,
-      active_threats: 2,
-      access_requests_today: 142,
-      system_risk_score: 24,
-      system_status: 'Operational',
-      mitre_killchain_phase: 'Defense Evasion (T1070)',
-      traffic_chart: [
-        { time: '08:00', packets: 420, risk: 12 },
-        { time: '10:00', packets: 890, risk: 18 },
-        { time: '12:00', packets: 1240, risk: 24 },
-        { time: '14:00', packets: 980, risk: 48 },
-        { time: '16:00', packets: 1450, risk: 32 },
-        { time: '18:00', packets: 650, risk: 15 }
+      total_users: 24,
+      active_devices: 18,
+      security_alerts: 5,
+      high_risk_alerts: 2,
+      pending_requests: 3,
+      threat_risk_score: 36,
+      threat_risk_tier: 'Medium Risk',
+      network_activity: [
+        { time: '00:00', normal: 45, suspicious: 8 },
+        { time: '04:00', normal: 30, suspicious: 12 },
+        { time: '08:00', normal: 120, suspicious: 14 },
+        { time: '12:00', normal: 240, suspicious: 28 },
+        { time: '16:00', normal: 190, suspicious: 22 },
+        { time: '20:00', normal: 80, suspicious: 16 }
       ],
-      alert_distribution: [
-        { name: 'Low', count: 68, color: '#10B981' },
-        { name: 'Warning', count: 24, color: '#F59E0B' },
-        { name: 'High Risk', count: 8, color: '#EF4444' }
+      recent_events: [
+        { time: '10:24:12', event: 'Access granted (risk score: 12)', user: 'user01', status: 'Allowed' },
+        { time: '10:21:05', event: 'Suspicious login attempt', user: 'user03', status: 'High-Risk' },
+        { time: '10:18:44', event: 'Device connected', user: 'lab-pc-03', status: 'Online' },
+        { time: '10:14:20', event: 'Access denied (unauthorized)', user: 'user12', status: 'Blocked' },
+        { time: '10:11:50', event: 'Policy update applied', user: 'admin', status: 'Success' }
+      ],
+      system_status: [
+        { service: 'Authentication Service', status: 'Online' },
+        { service: 'Threat Detection Engine', status: 'Online' },
+        { service: 'Digital Twin Simulator', status: 'Online' },
+        { service: 'Privacy Engine', status: 'Online' },
+        { service: 'Database', status: 'Online' }
       ]
     };
   }
