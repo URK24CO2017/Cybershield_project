@@ -160,7 +160,7 @@ export const ThreatDetection: React.FC = () => {
 
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={evaluation?.activity_timeline} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={Array.isArray(evaluation?.activity_timeline) ? evaluation.activity_timeline : []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
                 <XAxis dataKey="time" stroke="#94A3B8" fontSize={11} tickLine={false} />
                 <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
@@ -200,7 +200,7 @@ export const ThreatDetection: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={evaluation?.categories}
+                  data={Array.isArray(evaluation?.categories) ? evaluation.categories : []}
                   dataKey="percentage"
                   nameKey="category"
                   cx="50%"
@@ -209,7 +209,7 @@ export const ThreatDetection: React.FC = () => {
                   outerRadius={75}
                   paddingAngle={4}
                 >
-                  {evaluation?.categories.map((entry, index) => (
+                  {(Array.isArray(evaluation?.categories) ? evaluation.categories : []).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={donutColors[index % donutColors.length]} />
                   ))}
                 </Pie>
@@ -225,7 +225,7 @@ export const ThreatDetection: React.FC = () => {
           </div>
 
           <div className="space-y-1.5 text-xs pt-3 border-t border-slate-100">
-            {evaluation?.categories.map((cat, idx) => (
+            {(Array.isArray(evaluation?.categories) ? evaluation.categories : []).map((cat, idx) => (
               <div key={idx} className="flex justify-between items-center text-slate-600">
                 <span className="flex items-center gap-2">
                   <span
@@ -447,7 +447,7 @@ export const ThreatDetection: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {evaluation?.recent_anomalies.map((anom, idx) => (
+              {(Array.isArray(evaluation?.recent_anomalies) ? evaluation.recent_anomalies : []).map((anom, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/60">
                   <td className="py-3 px-4 font-mono text-slate-500">{anom.time}</td>
                   <td className="py-3 px-4 font-bold text-slate-800">{anom.type}</td>

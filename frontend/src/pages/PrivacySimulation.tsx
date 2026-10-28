@@ -195,7 +195,11 @@ export const PrivacySimulation: React.FC = () => {
         policy_name: policyName,
         sample_size: sampleSize,
       });
-      setSimulationResult(res);
+      if (res && Array.isArray(res.sample_decisions) && Array.isArray(res.tradeoff_curve)) {
+        setSimulationResult(res);
+      } else {
+        setSimulationResult(generateFallbackResult(eps, method));
+      }
     } catch {
       // Fallback cleanly without alerting so the demonstration remains seamless
       setSimulationResult(generateFallbackResult(eps, method));
@@ -795,7 +799,7 @@ export const PrivacySimulation: React.FC = () => {
                   <span className="font-mono text-slate-400">{simulationResult?.experiment_id}</span>
                 </div>
                 <div className="divide-y divide-slate-100 font-mono text-[11px]">
-                  {simulationResult?.sample_decisions.slice(0, 3).map((s, idx) => (
+                  {(Array.isArray(simulationResult?.sample_decisions) ? simulationResult.sample_decisions : []).slice(0, 3).map((s, idx) => (
                     <div key={idx} className="p-2.5 flex items-center justify-between hover:bg-slate-50/60">
                       <div className="flex items-center gap-2">
                         <span className="text-slate-400">{s.timestamp}</span>
@@ -918,7 +922,7 @@ export const PrivacySimulation: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
-                  {simulationResult?.tradeoff_curve.map((row, idx) => (
+                  {(Array.isArray(simulationResult?.tradeoff_curve) ? simulationResult.tradeoff_curve : []).map((row, idx) => (
                     <tr
                       key={idx}
                       className={Math.abs(row.epsilon - epsilon) < 0.15 ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50/50'}

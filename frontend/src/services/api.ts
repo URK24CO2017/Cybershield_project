@@ -275,26 +275,193 @@ function getFallbackData(endpoint: string): any {
   if (endpoint.includes('/threat-detection/evaluation')) {
     return {
       metrics: {
-        active_alerts: 2,
-        high_risk: 1,
+        active_alerts: 5,
+        high_risk: 2,
         medium_risk: 3,
-        low_risk: 84,
-        total_evaluations: 1250,
-        model_accuracy: 95.4,
-        precision: 94.2,
-        recall: 93.8,
-        f1_score: 94.0
+        low_risk: 84
       },
+      categories: [
+        { category: 'Lateral Movement', count: 2, percentage: 40 },
+        { category: 'Credential Access', count: 1, percentage: 20 },
+        { category: 'Port Reconnaissance', count: 1, percentage: 20 },
+        { category: 'Command & Control', count: 1, percentage: 20 }
+      ],
       confusion_matrix: {
-        true_positive: 142,
-        false_positive: 8,
-        true_negative: 820,
-        false_negative: 10
+        matrix: [
+          [1220, 55],
+          [35, 190]
+        ],
+        labels: ['Normal', 'Threat'],
+        accuracy: 94.2,
+        precision: 88.5,
+        recall: 84.1,
+        f1_score: 86.2
       },
-      recent_detections: [
-        { id: 1, device: 'Lab PC-03', anomaly_score: 0.88, classification: 'Malicious Lateral Probe', timestamp: '14:28:11' },
-        { id: 2, device: 'Lab PC-02', anomaly_score: 0.52, classification: 'Unusual Port Scan', timestamp: '14:20:00' }
+      recent_anomalies: [
+        {
+          time: '14:28:11',
+          type: 'Lateral Probe',
+          description: 'High-entropy SYN sweep across subnet 192.168.1.0/24',
+          device: 'Lab PC-03',
+          risk: 'High',
+          status: 'Blocked'
+        },
+        {
+          time: '14:21:05',
+          type: 'Credential Stuffing',
+          description: 'Rapid failed authentication retries against 3D Printer',
+          device: '3D Printer',
+          risk: 'Medium',
+          status: 'Monitoring'
+        },
+        {
+          time: '13:55:12',
+          type: 'Unusual Port Scan',
+          description: 'Port sweep targeting SQL port 5432 and SSH 22',
+          device: 'Research Server',
+          risk: 'High',
+          status: 'Blocked'
+        }
+      ],
+      activity_timeline: [
+        { time: '00:00', normal: 45, suspicious: 8 },
+        { time: '04:00', normal: 30, suspicious: 12 },
+        { time: '08:00', normal: 120, suspicious: 14 },
+        { time: '12:00', normal: 240, suspicious: 28 },
+        { time: '16:00', normal: 190, suspicious: 22 },
+        { time: '20:00', normal: 80, suspicious: 16 }
       ]
+    };
+  }
+
+  if (endpoint.includes('/threat-detection/score')) {
+    return {
+      risk_score: 82,
+      is_anomalous: true,
+      anomaly_score: 0.82,
+      inference_time_ms: 1.4,
+      model: 'IsolationForest'
+    };
+  }
+
+  if (endpoint.includes('/simulation/attack')) {
+    return {
+      scenario_name: 'Compromised Lab PC (Lateral Movement)',
+      description: 'Simulates an attacker gaining control of Lab PC-03 via malicious payload and attempting to pivot across the internal subnet to target the Research Server and Database.',
+      compromised_node: 'Lab PC-03',
+      at_risk_nodes: ['Lab PC-01', 'Research Server', 'Database'],
+      safe_nodes: ['IoT Sensor', '3D Printer', 'Smart Door'],
+      blocked_nodes: ['Smart Door'],
+      risk_delta: 45,
+      potential_impact: 'Critical exfiltration of laboratory research datasets and intellectual property.',
+      recommended_containment: 'Isolate Lab PC-03 network port via digital twin quarantine switch and revoke active session tokens.',
+      containment_available: true,
+      steps: [
+        {
+          step_num: 1,
+          title: 'Initial Access (Phishing Macro Execution)',
+          description: 'Adversary achieves initial shell on Lab PC-03 via student email attachment.',
+          source_node: 'External Attacker',
+          target_node: 'Lab PC-03',
+          technique_id: 'T1204.002',
+          status: 'Compromised'
+        },
+        {
+          step_num: 2,
+          title: 'Subnet Reconnaissance & Port Scanning',
+          description: 'Attacker scans 192.168.1.0/24 discovering open SSH port 22 and SQL port 5432.',
+          source_node: 'Lab PC-03',
+          target_node: 'Research Server',
+          technique_id: 'T1046',
+          status: 'At Risk'
+        },
+        {
+          step_num: 3,
+          title: 'Credential Dumping via LSASS',
+          description: 'Cached laboratory researcher credentials dumped to execute pass-the-hash on Database.',
+          source_node: 'Lab PC-03',
+          target_node: 'Database',
+          technique_id: 'T1003.001',
+          status: 'At Risk'
+        },
+        {
+          step_num: 4,
+          title: 'Adaptive Zero-Trust Defense Enforcement',
+          description: 'CyberShield R-AAC engine detects abnormal port entropy and activates perimeter firewall shielding Smart Door.',
+          source_node: 'CyberShield Engine',
+          target_node: 'Smart Door',
+          technique_id: 'D3-NDP',
+          status: 'Blocked'
+        }
+      ]
+    };
+  }
+
+  if (endpoint.includes('/simulation/privacy')) {
+    return {
+      experiment_id: `EXP-${Date.now() % 100000}-4821`,
+      dataset_name: 'Smart Lab Sensor & Auth Dataset',
+      privacy_method: 'ε-Differential Privacy (Laplace Mechanism)',
+      epsilon: 0.8,
+      policy_name: 'Zero-Trust Strict Laplace Bounding',
+      sample_size: 500,
+      id_risk_before: 14.8,
+      id_risk_after: 3.2,
+      model_acc_before: 95.4,
+      model_acc_after: 93.8,
+      decision_quality_before: 97.2,
+      decision_quality_after: 95.9,
+      far_rate: 2.8,
+      fdr_rate: 3.4,
+      tradeoff_curve: [
+        { epsilon: 0.1, model_accuracy: 84.8, identification_risk: 1.9, decision_consistency: 86.2 },
+        { epsilon: 0.2, model_accuracy: 86.1, identification_risk: 2.8, decision_consistency: 87.5 },
+        { epsilon: 0.5, model_accuracy: 89.2, identification_risk: 4.9, decision_consistency: 89.8 },
+        { epsilon: 1.0, model_accuracy: 92.4, identification_risk: 8.2, decision_consistency: 92.5 },
+        { epsilon: 2.0, model_accuracy: 94.6, identification_risk: 13.5, decision_consistency: 95.1 },
+        { epsilon: 5.0, model_accuracy: 96.8, identification_risk: 21.8, decision_consistency: 97.2 }
+      ],
+      sample_decisions: [
+        {
+          timestamp: '14:28:11',
+          pseudonymous_user_id: 'U_9E72A1',
+          requested_resource: 'Research Server',
+          risk_score: 76,
+          decision: 'Denied',
+          privacy_applied: 'DP Laplace (ε=0.80) + HMAC'
+        },
+        {
+          timestamp: '14:28:15',
+          pseudonymous_user_id: 'U_4C88B9',
+          requested_resource: '3D Printer Controller',
+          risk_score: 18,
+          decision: 'Allowed',
+          privacy_applied: 'DP Laplace (ε=0.80) + HMAC'
+        },
+        {
+          timestamp: '14:28:19',
+          pseudonymous_user_id: 'U_B319F4',
+          requested_resource: 'Central SQL Database',
+          risk_score: 84,
+          decision: 'Denied',
+          privacy_applied: 'DP Laplace (ε=0.80) + HMAC'
+        },
+        {
+          timestamp: '14:28:24',
+          pseudonymous_user_id: 'U_78AA2C',
+          requested_resource: 'Cleanroom Airlock',
+          risk_score: 42,
+          decision: 'Extra Verification',
+          privacy_applied: 'DP Laplace (ε=0.80) + HMAC'
+        }
+      ],
+      theoretical_explanation: {
+        privacy_mechanism: 'Laplace Mechanism (Dwork et al.)',
+        sensitivity: 'Δf = 1.0 (L1-norm bounding for contextual risk components)',
+        noise_distribution: 'Laplace(0, 1.25)',
+        pseudonymisation: 'HMAC-SHA256 with rotating server-side salt',
+        limitations: 'Pseudonymisation alone does not prevent auxiliary quasi-identifier linkage. Differential privacy guarantees strictly apply to aggregate risk queries and noisy decision boundaries.'
+      }
     };
   }
 

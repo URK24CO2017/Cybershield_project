@@ -124,7 +124,11 @@ export const AttackSimulation: React.FC = () => {
   const loadScenarioData = async (id: string) => {
     try {
       const res = await api.runAttackSimulation(id);
-      setSimulationResult(res);
+      if (res && Array.isArray(res.steps) && res.steps.length > 0) {
+        setSimulationResult(res);
+      } else {
+        setSimulationResult(defaultResult);
+      }
     } catch {
       setSimulationResult(defaultResult);
     }
@@ -164,7 +168,7 @@ export const AttackSimulation: React.FC = () => {
     if (isPlaying && !isQuarantined) {
       timerRef.current = setInterval(() => {
         setCurrentStepIndex((prev) => {
-          const maxSteps = simulationResult?.steps.length || 4;
+          const maxSteps = simulationResult?.steps?.length || 4;
           const next = prev + 1;
           if (next >= maxSteps) {
             // Loop smoothly back to step 0 after brief pause
@@ -818,7 +822,7 @@ export const AttackSimulation: React.FC = () => {
               <span className="text-[11px] font-normal text-slate-500">Click any step to jump to phase</span>
             </h4>
             <div className="space-y-2">
-              {simulationResult?.steps.map((step, idx) => {
+              {(Array.isArray(simulationResult?.steps) ? simulationResult.steps : defaultResult.steps).map((step, idx) => {
                 const isCurrent = currentStepIndex === idx && !isQuarantined;
                 const isPassed = currentStepIndex > idx || isQuarantined;
 
