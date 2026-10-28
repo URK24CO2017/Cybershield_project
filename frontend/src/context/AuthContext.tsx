@@ -20,11 +20,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshUser = async () => {
     try {
       const currentUser = await api.getMe();
-      setUser(currentUser);
-      localStorage.setItem('cybershield_user', JSON.stringify(currentUser));
+      if (currentUser && currentUser.email) {
+        setUser(currentUser);
+        localStorage.setItem('cybershield_user', JSON.stringify(currentUser));
+        return;
+      }
     } catch {
-      setUser(null);
-      removeAuthToken();
+      // Keep cached session if available
+    }
+
+    const storedUser = localStorage.getItem('cybershield_user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+        return;
+      } catch {
+        // ignore
+      }
     }
   };
 

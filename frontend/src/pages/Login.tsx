@@ -28,24 +28,29 @@ export const Login: React.FC<LoginProps> = ({ onNavigateToSignUp }) => {
     }
   };
 
-  const setDemoRole = (role: 'Admin' | 'Student' | 'Researcher' | 'Technician') => {
-    switch (role) {
-      case 'Admin':
-        setEmail('admin@lab.edu');
-        setPassword('Admin@123456');
-        break;
-      case 'Researcher':
-        setEmail('researcher@lab.edu');
-        setPassword('Research@123456');
-        break;
-      case 'Technician':
-        setEmail('technician@lab.edu');
-        setPassword('Tech@123456');
-        break;
-      case 'Student':
-        setEmail('student@lab.edu');
-        setPassword('Student@123456');
-        break;
+  const setDemoRole = async (role: 'Admin' | 'Student' | 'Researcher' | 'Technician') => {
+    setError(null);
+    let targetEmail = 'admin@lab.edu';
+    let targetPassword = 'Admin@123456';
+    if (role === 'Researcher') {
+      targetEmail = 'researcher@lab.edu';
+      targetPassword = 'Research@123456';
+    } else if (role === 'Technician') {
+      targetEmail = 'technician@lab.edu';
+      targetPassword = 'Tech@123456';
+    } else if (role === 'Student') {
+      targetEmail = 'student@lab.edu';
+      targetPassword = 'Student@123456';
+    }
+    setEmail(targetEmail);
+    setPassword(targetPassword);
+    setLoading(true);
+    try {
+      await login(targetEmail, targetPassword);
+    } catch (err: any) {
+      setError(err?.message || 'Login failed. Please verify credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
